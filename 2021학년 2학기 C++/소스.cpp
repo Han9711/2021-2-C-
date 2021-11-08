@@ -1,9 +1,12 @@
 /*----------------------------------------------------------------------------------------
-  2021 2학기 C++														        7주 2일 - 2교시
+  2021 2학기 C++														        8주 - 1교시
   
-  사용자가 새로운 자료형 You를 만든다.
 
-  string과 같은 기능을 갖는 String을 만들며 class 설계에 필요한 것들을 학습
+  표준 string과 같은 기능을 갖는 String을 만들며 class 설계에 필요한 것들을 학습
+
+  class의 멤버변수(기본 private)에 접근하려면 함수를 이용한다.
+  값을 읽을 때는 getter
+  값을 쓸 때는 setter 를 사용한다.
   ----------------------------------------------------------------------------------------*/
 
 #include <iostream>
@@ -15,26 +18,23 @@ using namespace std;
 // main() 이 수정되면 안된다.
 
 class String {
-	size_t num{};	// 저장한 글자 수
-	char* p{};	// 글자가 있는 메모리
+	size_t num{ };	// 저장한 글자 수
+	char* p{ };		// 글자가 있는 메모리
 
 public:
-	String (const char* str) : num{ strlen(str) } {
-		// 1. 글자 수를 센다
-		num = strlen(str);
-		// 2. 센 수 만큼 글자를 저장할 공간을 요청한다.
+	String(const char* str) : num{ strlen(str) } {
 		p = new char[num];
-		// 3. 그 공간에 p가 가리키는 글자를 저장한다.
 		memcpy(p, str, num);
 
-		cout << "생성자(const char*) - 갯수:" << num << ", 주소:" << (void*)p << endl;
+		cout << "생성자(const char*) - 갯수: " << num << ", 주소:" << (void*)p << endl;
 	}
-	
+
 	~String() {
-		cout << "소멸자 -" << num << ", 주소:" << (void*)p << endl;
+		cout << "소멸자 - 갯수:" << num << ", 주소:" << (void*)p << endl;
 		delete[] p;
 	}
 
+	// 다음시간 이거 복습하고 시작
 	String& operator=(const String& other) {
 		if (this == &other) {
 			return *this;
@@ -46,13 +46,28 @@ public:
 
 		memcpy(p, other.p, num);
 
+		cout << "할당연산자 - 갯수:" << num << ", 주소" << (void*)p << endl;
+
 		return *this;
 	}
+
+
+	// 클래스와 바깥 세상이 소통하기 위한 함수들
 
 	void show() {
 		for (int i = 0; i < num; ++i)
 			cout << p[i];
 		cout << endl;
+	}
+
+
+	// 글자수를 알려주는 getter는 값을 읽기만 하기 때문에 class에 위험하지 않다.
+	// 다른 말로 하면 멤버변수의 값이 변할 수가 없다는 것이다.
+	// 이 상황을 더욱 명확하게 이 함수의 이용자에게 알릴 수 있다면 좋겠다.
+	// -> 함수에 한정사 const를 붙여 이 함수를 사용하더라도 멤버변수의 값이 변하지 않음을 보증하면 된다.
+
+	size_t size() const {
+		return num;
 	}
 };
 
@@ -61,12 +76,12 @@ int main()
 //---------
 {
 	String s1{ "안녕하세요" };
-	String s2{ "C++ 정말 좋은 프로그래밍 언어이다." };
+	String s2{ "C++ 정말 좋은 프로그래밍 언어이다" };
+	
 
-	s2 = s1;
 
-	s1.show();
-	s2.show();
+	/*s1.show();
+	s2.show();*/
 
 	/*save("소스.cpp");*/  
-}
+ }
