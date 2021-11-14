@@ -5372,3 +5372,730 @@ int main()
 
 	save("소스.cpp");  
 }
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-10 오후 12:18:36 수요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+	friend ostream& operator<<(ostream&, const Dog&);
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << ", " << dog.age << "살 달린다";
+	return os;
+}
+
+// [문제] 프로그램이 문제없이 실행되게 하자.
+// Dog a와 b를 파일 "개들.txt"에 저장하라.
+
+//---------
+int main()   
+//---------
+{
+	Dog a{ "코코"};
+	Dog b{ "보리", 3 };
+
+	ofstream out{"개들.txt"};
+
+	out << a << endl;
+	out << b << endl;
+
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-10 오후 12:50:53 수요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] 프로그램이 문제없이 실행되게 하자.
+// Dog a와 b를 파일 "개들.txt"에 저장하라.
+// Dog 2마리 정보가 파일 "개들.txt"에 저장되어있다.
+// 파일에서 정보를 읽고 화면에 출력하라.
+
+
+//---------
+int main()   
+//---------
+{
+	ifstream in{ "개들.txt" };
+	
+	Dog a;
+	Dog b;
+
+	in >> a >> b;
+
+	cout << a << endl;
+	cout << b << endl;
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-10 오후 12:57:28 수요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] Dog 1'0000 객체를 랜덤하게 생성하여 파일 "개만마리.txt"에 기록하라
+// 이름은 영소문자 길이는 10글자 고정한다.
+// 나이 [1, 1000]
+
+
+//---------
+int main()   
+//---------
+{
+	Dog a;
+	Dog b;
+
+	cin >> a >> b;
+
+	cout << a << endl;
+	cout << b << endl;
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-10 오후 1:04:31 수요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <random>
+#include "save.h"
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<>uid{ 1, 1000 };
+uniform_int_distribution<>uidAlpha{ 'a', 'z' };
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+	void setName() {
+		for (int i = 0; i < 10; ++i) {
+			name += uidAlpha(dre);
+		}
+	}
+
+	void setAge() {
+		age = uid(dre);
+	}
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] Dog 1'0000 객체를 랜덤하게 생성하여 파일 "개만마리.txt"에 기록하라
+// 이름은 영소문자 길이는 10글자 고정한다.
+// 나이 [1, 1000]
+
+
+//---------
+int main()   
+//---------
+{
+	ofstream out{ "개만마리.txt" };
+
+	for (int i = 0; i < 1'0000; ++i) {
+		Dog a;			// Dog 한마리 생성
+		a.setName();
+		a.setAge();
+		out << a << endl;
+	}
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-11 오후 1:38:14 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <random>
+#include "save.h"
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<>uid{ 1, 1000 };
+uniform_int_distribution<>uidAlpha{ 'a', 'z' };
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+	void setName() {
+		for (int i = 0; i < 10; ++i) {
+			name += uidAlpha(dre);
+		}
+	}
+
+	void setAge() {
+		age = uid(dre);
+	}
+
+	void ascending_Age() {
+
+	}
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] Dog 1'0000 마리 정보가 "개만마리txt"에  저장되어있다.
+// [1] 자료를 읽어 화면에 출력하라.
+// [2] 이름오름차순으로 정렬하라. - 출력
+// [3] 나이오름차순으로 정렬하라. - 출력
+
+
+//---------
+int main()   
+//---------
+{
+	// [1] 자료를 읽어 화면에 출력하라.
+	ifstream in{ "개만마리.txt" };
+	
+	for (int i = 0; i < 10000; ++i) {
+		Dog dog;
+		in >> dog;
+		cout << dog << endl;
+	}
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-11 오후 1:48:30 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <random>
+#include "save.h"
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<>uid{ 1, 1000 };
+uniform_int_distribution<>uidAlpha{ 'a', 'z' };
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+	void setName() {
+		for (int i = 0; i < 10; ++i) {
+			name += uidAlpha(dre);
+		}
+	}
+
+	void setAge() {
+		age = uid(dre);
+	}
+
+	void ascending_Age() {
+
+	}
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] Dog 1'0000 마리 정보가 "개만마리txt"에  저장되어있다.
+// [1] 자료를 읽어 화면에 출력하라.
+// [2] 이름오름차순으로 정렬하라. - 출력
+// [3] 나이오름차순으로 정렬하라. - 출력
+
+Dog dogs[1'0000];
+
+//---------
+int main()   
+//---------
+{
+	// [2] 이름오름차순으로 정렬하라. - 출력
+	// - 모든 자료를 읽어 메모리에 저장하고 있어야 한다.
+
+	ifstream in{ "개만마리.txt" };
+
+	for ( Dog dog : dogs )
+		in >> dog;
+
+	cout << dogs[9999] << endl;
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-11 오후 1:50:42 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <random>
+#include "save.h"
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<>uid{ 1, 1000 };
+uniform_int_distribution<>uidAlpha{ 'a', 'z' };
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+	void setName() {
+		for (int i = 0; i < 10; ++i) {
+			name += uidAlpha(dre);
+		}
+	}
+
+	void setAge() {
+		age = uid(dre);
+	}
+
+	void ascending_Age() {
+
+	}
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] Dog 1'0000 마리 정보가 "개만마리txt"에  저장되어있다.
+// [1] 자료를 읽어 화면에 출력하라.
+// [2] 이름오름차순으로 정렬하라. - 출력
+// [3] 나이오름차순으로 정렬하라. - 출력
+
+Dog dogs[1'0000];
+
+//---------
+int main()   
+//---------
+{
+	ifstream in{ "개만마리.txt" };
+
+	Dog* p = new Dog[1'0000];
+
+	for (int i = 0; i < 10000; ++i)
+		in >> *(p + i);
+
+	cout << p[9999] << endl;
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-11 오후 2:06:07 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				수34목23												   11주 1일 
+  
+  1. 지금까지 강의한 내용 정리
+  2. class Dog - 파일에 입출력
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<>uid{ 1, 1000 };
+uniform_int_distribution<>uidAlpha{ 'a', 'z' };
+
+class Dog {
+	string name{};
+	int age{};
+
+public:
+	Dog() {}
+	Dog( string s ) : name{ s } {}
+	Dog(string s, int n) : name{ s }, age{ n } {}
+
+	void setName() {
+		for (int i = 0; i < 10; ++i) {
+			name += uidAlpha(dre);
+		}
+	}
+
+	void setAge() {
+		age = uid(dre);
+	}
+
+	void ascending_Age() {
+
+	}
+
+	string getName() const {
+		return name;
+	}
+
+	int getAge() const {
+		return age;
+	}
+
+	// 출력연산자
+	friend ostream& operator<<(ostream&, const Dog&);
+
+	// 입력연산자
+	friend istream& operator>>(istream&, Dog&);
+
+};
+
+ostream& operator<<(ostream& os, const Dog& dog)
+{
+	os << dog.name << "  " << dog.age << "  ";
+	return os;
+}
+
+istream& operator>>(istream& is, Dog& dog)
+{
+	is >> dog.name >> dog.age;
+	return is;
+}
+
+// [문제] Dog 1'0000 마리 정보가 "개만마리txt"에  저장되어있다.
+// [1] 자료를 읽어 화면에 출력하라.
+// [2] 이름오름차순으로 정렬하라. - 출력
+// [3] 나이오름차순으로 정렬하라. - 출력
+
+
+//---------
+int main()   
+//---------
+{
+	ifstream in{ "개만마리.txt" };
+
+	Dog* p = new Dog[1'0000];
+
+	for (int i = 0; i < 10000; ++i)
+		in >> p[i];
+
+	// 이제 정렬 준비가 되었다.
+	sort(p, p + 10000, [](const Dog& a, const Dog& b) {
+		return a.getName() < b.getName();
+		});
+	
+	for (int i = 0; i < 10000; ++i)
+		cout << p[i] << endl;
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-11 오후 2:50:03 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				               						  수34목23		   11주 1일 
+  
+  class 간의 관계
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+// [문제] 모든 문자를 대문자로 처리하는 STRING 클래스를
+// 만들어라. main
+
+class STRING : public string {
+public:
+	STRING(string s) : string{ s } {
+		for (int i = 0; i < s.size(); ++i)
+			(*this)[i] = toupper((*this)[i]);
+	}
+};
+
+//---------
+int main()   
+//---------
+{
+	STRING s{ "C++ programming language" };
+
+	s += "!";
+
+	cout << s << endl;		// C++ PROGRAMMING LANGUAGE
+
+	save("소스.cpp");  
+}
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-11 오후 3:03:56 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				               						  수34목23		   11주 1일 
+  
+  class 간의 관계 - 상속(inheritance)
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+// [문제] 모든 문자를 대문자로 처리하는 STRING 클래스를
+// 만들어라. main
+
+class STRING : public string {
+public:
+	STRING(string s) : string{ s } {
+		for (int i = 0; i < s.size(); ++i)
+			(*this)[i] = toupper((*this)[i]);
+	}
+};
+
+//---------
+int main()   
+//---------
+{
+	STRING s{ "C++ programming language" };
+
+	s += "!";
+
+	cout << s << endl;		// C++ PROGRAMMING LANGUAGE
+
+	save("소스.cpp");  
+}
