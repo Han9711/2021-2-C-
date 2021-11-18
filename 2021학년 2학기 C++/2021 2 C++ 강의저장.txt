@@ -6497,3 +6497,265 @@ int main()
 
 
 
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-18 오후 1:58:11 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				               						  수34목23		   12주 1일
+
+  class 간의 관계 - 상속(inheritance)
+
+  1. 부모/ 자식 - 메모리는 어떻게 구성되나?
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include <Windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+#include "save.h"
+using namespace std;
+
+class Animal {
+protected:				// 조상의 private 멤버를 자식의 private 멤버로
+	string name;
+
+public:
+	Animal() {}
+	Animal(string s) : name {s} {}
+	~Animal() {}
+
+	void move() { cout << name << " 움직인다" << endl; }
+};
+
+class Dog : public Animal {
+
+public:
+
+	Dog() {}
+	Dog(string s) : Animal{ s } {
+		
+	}
+	~Dog(){}
+
+	void move() {
+		cout << name << " 달린다" << endl;
+		PlaySound(L"bark.wav", 0, SND_FILENAME);
+	}
+	
+};
+
+
+class Bird : public Animal {
+
+public:
+
+	Bird(){}
+	Bird(string s) : Animal{s} {}
+	~Bird(){}
+
+	void move() {
+		cout << name << " 난다" << endl;
+		PlaySound(L"새소리.wav", 0, SND_FILENAME); 
+	}
+
+};
+
+
+//---------
+int main()
+//---------
+{
+	Dog a{ "코코" };		
+
+	a.move();		// 코코가 달린다
+
+	Bird b{ "꾀꼬리" };
+
+	b.move();
+	
+	save("소스.cpp");
+}
+
+
+
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-18 오후 2:00:20 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				               						  수34목23		   12주 1일
+
+  class 간의 관계 - 상속(inheritance)
+
+  1. 부모/ 자식 - 메모리는 어떻게 구성되나?
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include <Windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+#include "save.h"
+using namespace std;
+
+class Animal {
+protected:				// 조상의 private 멤버를 자식의 private 멤버로
+	string name;
+
+public:
+	Animal() {}
+	Animal(string s) : name {s} {}
+	~Animal() {}
+
+	void move() { cout << name << " 움직인다" << endl; }
+};
+
+class Dog : public Animal {
+
+public:
+
+	Dog() {}
+	Dog(string s) : Animal{ s } {
+		
+	}
+	~Dog(){}
+
+	void move() {
+		cout << name << " 달린다" << endl;
+		PlaySound(L"bark.wav", 0, SND_FILENAME);
+	}
+	
+};
+
+
+class Bird : public Animal {
+
+public:
+
+	Bird(){}
+	Bird(string s) : Animal{s} {}
+	~Bird(){}
+
+	void move() {
+		cout << name << " 난다" << endl;
+		PlaySound(L"새소리.wav", 0, SND_FILENAME); 
+	}
+
+};
+
+
+//---------
+int main()
+//---------
+{
+	Dog a[3];
+	Bird b[2];
+
+	for (Dog& dog : a)
+		dog.move();
+	
+	save("소스.cpp");
+}
+
+
+
+
+
+--------------------------------------
+소스.cpp저장시간 - 2021-11-18 오후 2:40:42 목요일
+--------------------------------------
+
+/*----------------------------------------------------------------------------------------
+  2021 2학기 C++				               						  수34목23		   12주 1일
+
+  class 간의 관계 - 상속(inheritance)
+
+  1. 부모/ 자식 - 메모리는 어떻게 구성되나?
+  ----------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include <Windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+#include "save.h"
+using namespace std;
+
+class Animal {
+protected:				// 조상의 private 멤버를 자식의 private 멤버로
+	string name;
+
+public:
+	Animal() {}
+	Animal(string s) : name {s} {}
+	~Animal() {}
+
+	virtual void move() { cout << name << " 움직인다" << endl; }
+};
+
+class Dog : public Animal {
+
+public:
+
+	Dog() {}
+	Dog(string s) : Animal{ s } {
+		
+	}
+	~Dog(){}
+
+	void move() {
+		cout << name << " 달린다" << endl;
+		PlaySound(L"bark.wav", 0, SND_FILENAME);
+	}
+	
+};
+
+
+class Bird : public Animal {
+
+public:
+
+	Bird(){}
+	Bird(string s) : Animal{s} {}
+	~Bird(){}
+
+	void move() {
+		cout << name << " 난다" << endl;
+		PlaySound(L"새소리.wav", 0, SND_FILENAME); 
+	}
+
+};
+
+// c++에서 다형성을 구현하는 핵심 키워드 virtual
+
+
+//---------
+int main()
+//---------
+{
+	Dog a[3]{"코코"s, "보리"s, "댕댕이"s};
+	Bird b[2]{"닭"s, "오리"s};
+
+	Animal* animals[5];
+
+	animals[0] = &a[0];
+	animals[1] = &b[0];
+	animals[2] = &a[2];
+	animals[3] = &a[1];
+	animals[4] = &b[1];
+
+	for (int i = 0; i < 5; ++i)
+		animals[i]->move();
+	
+	
+	save("소스.cpp");
+}
+
+
+
