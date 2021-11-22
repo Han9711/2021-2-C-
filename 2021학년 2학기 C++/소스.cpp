@@ -1,85 +1,137 @@
 /*----------------------------------------------------------------------------------------
-  2021 2학기 C++				               						  수34목23		   12주 1일
+  2021 2학기 C++				               						             9주 2일 - 2교시
 
-  class 간의 관계 - 상속(inheritance)
+  표준 string과 유사한 기능을 하는
+	  string을 만들며 class 설계에 필요한 것들을 학습
 
-  1. 부모/ 자식 - 메모리는 어떻게 구성되나?
+ * - 내가 만든 클래스가 자원을 할당받는다면 (모든 이야기는 여기에서 시작)
+	 1. 생성자에서 자원을 할당 받는다. (RAII)
+	 2. 소멸자에서 자원을 반환한다.
+	 3. 복사생성자를 만들어 깊은 복사를 한다.
+	 4. 복사할당연산자를 만들어 깊은 복사를 한다.
+	 5. 이동생성자를 만들어 복사보다 효율적인 동작이 되게 한다.
+	 6. 이동할당연산자도 잊지 말고 만들어야 한다.
+
+  책 - 10장 클래스 생성자와 소멸자
+	   11장 친구 관계와 연산자 오버로딩
+	   13.01 문자열 클래스
   ----------------------------------------------------------------------------------------*/
 
 #include <iostream>
 #include <string>
-#include <Windows.h>
-#include <mmsystem.h>
-#pragma comment(lib, "winmm.lib")
+#include <algorithm>
 #include "save.h"
 using namespace std;
 
-class Animal {
-protected:				// 조상의 private 멤버를 자식의 private 멤버로
-	string name;
+class String {
+	size_t num{};	// 저장한 글자 수
+	char* p;		// 글자가 있는 메모리
 
 public:
-	Animal() {}
-	Animal(string s) : name {s} {}
-	~Animal() {}
+	String() {
+		cout << "디폴트 생성자() - 갯수:" << num << ", 주소:" << (void*)p << endl;
+	}
 
-	virtual void move() { cout << name << " 움직인다" << endl; }
-};
+	String(const char* str) : num{ strlen(str) } {
+		p = new char[num];
+		memcpy(p, str, num);
 
-class Dog : public Animal {
+		cout << "생성자(const char*) - 갯수: " << num << ", 주소:" << (void*)p << endl;
+	}
 
-public:
+	~String() {
+		cout << "소멸자 - 갯수:" << num << ", 주소:" << (void*)p << endl;
+		delete[] p;
+	}
 
-	Dog() {}
-	Dog(string s) : Animal{ s } {
+	String(const String& other) : num{ other.num }, p{ new char[num] } {
+		memcpy(p, other.p, num);
+		cout << "복사생성자(const String&) - 갯수: " << num << ", 주소:" << (void*)p << endl;
+	}
+
+	String& operator=(const String& other) {
+		if (this == &other) {
+			return *this;
+		}
+
+		delete[] p;
+		num = other.num;
+		p = new char[num];
+
+		memcpy(p, other.p, num);
+
+		cout << "복사할당연산자 - 갯수:" << num << ", 주소:" << (void*)p << endl;
 		
+		return *this;
 	}
-	~Dog(){}
 
-	void move() {
-		cout << name << " 달린다" << endl;
-		PlaySound(L"bark.wav", 0, SND_FILENAME);
+	// 이동 생성자
+	String(String&& other) noexcept : num{ other.num }, p{ other.p } {
+		other.num = 0;
+		other.p = nullptr;
+		cout << "이동생성자 - 갯수:" << num << ", 주소:" << (void*)p << endl;
 	}
-	
+
+	// 이동할당연산자
+	String& operator=(String&& other) noexcept {
+		if (this == &other)
+			return *this;
+
+		delete[] p;
+		num = other.num;
+		p = other.p;
+
+		other.num = 0;
+		other.p = nullptr;
+
+		cout << "이동할당연산자 - 갯수:" << num << ", 주소:" << (void*)p << endl;
+
+		return *this;
+	}
+
+	// 연산자 오버로딩
+	String operator+(const String& rhs) const {
+		String temp;
+		temp.num = num + rhs.num;
+		temp.p = new char[temp.num];
+
+		memcpy(temp.p, p, num);
+		memcpy(temp.p + num, rhs.p, rhs.num);
+
+		return temp;
+	}
+
+
+	size_t size() const {
+		return num;
+	}
+
+	friend ostream& operator<<(ostream&, const String&);
 };
 
+// 입출력함수는 friend로 사용한다.
+ostream& operator<<(ostream& os, const String& s)
+{
+	for (int i = 0; i < s.num; ++i)
+		os << s.p[i];
+	return os;
+}
 
-class Bird : public Animal {
+// name을 길이 내림차순으로 정렬한 후
+// 화면에 출력하라. (20)
 
-public:
-
-	Bird(){}
-	Bird(string s) : Animal{s} {}
-	~Bird(){}
-
-	void move() {
-		cout << name << " 난다" << endl;
-		PlaySound(L"새소리.wav", 0, SND_FILENAME); 
-	}
-
-};
-
-// c++에서 다형성을 구현하는 핵심 키워드 virtual
-// 1. 메모리 크기
-// 2. 모든 객체가 vtable을 가리키는 vptr을 추가한다.
-
-// 동물농장 관리자다
-// 사용자가 몇 마리의 동물을 관리하는지 입력받아라.
-// 임의의 홀짝값에 따라 
-// 홀수이면 Dog를 짝수이면 Bird를 생성하라.
-// 모든 동물의 move()를 호출하여 다형성이 구현됨을 확인하시오.
-
-// 포인터 여러개를 정적으로 만들어야한다.
 
 //---------
 int main()
 //---------
 {
-	cout << "몇 마리를 관리할까요?";
-	int num;
-	cin >> num;
-	
+	String name[3] = { "파일", "Git", "창"};
+
+	cout << endl;
+	cout << "----------------------------------------------------------" << endl;
+	sort(begin(name), end(name), [](const String& a, const String& b) {
+		return a.size() > b.size();
+	});
+
 	/*save("소스.cpp");*/
 }
-
-
